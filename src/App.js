@@ -1,25 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { Switch, Route} from "react-router-dom"
+import OrganizationsList from './containers/OrganizationsList'
+import NavBar from './components/NavBar'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NavBar />
+      <Switch>
+        
+        <Route exact path='/'>
+          <>
+            <header className="App-header">
+              <h1>My Awesome Giving App</h1>
+            </header>
+            <OrganizationsList />
+          </>
+        </Route>
+        <Route exact path='/organizations'>
+          <h1>Organizations go here</h1>
+        </Route>
+        <Route exact path='/organizations/:id'>
+          <h1>Why helloooo</h1>
+        </Route>
+        <Route exact path='/profile'>
+          <h1>Profile Goes here</h1>
+        </Route>
+      </Switch>
+    </>
   );
 }
 
