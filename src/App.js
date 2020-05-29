@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Switch, Route, useHistory} from "react-router-dom"
 import OrganizationsList from './containers/OrganizationsList'
 import NavBar from './components/NavBar'
-import { getCurrentOrganizations } from './helperFunctions/organizations'
+import { getCurrentOrganizations, getUserOrganizations } from './helperFunctions/organizations'
 import OrganizationForm from './containers/OrganizationForm'
+import Profile from './components/Profile'
+import OrganizationDetails from './components/OrganizationDetails'
 
 function App() {
   const [organizations, setOrganizations] = useState([])
@@ -62,13 +64,30 @@ function App() {
           <h1>Create New Organization</h1>
           <OrganizationForm currentUserId={currentUser.id} createOrganization={createOrganization} />
         </Route>
-        <Route exact path='/organizations/:id'>
-          <h1>Organization's Details go here</h1>
-        </Route>
+        <Route 
+          exact 
+          path='/organizations/:id' 
+          render={props => {
+            const org = organizations.find(o => o.id === parseInt(props.match.params.id))
+            
+            if (org) {
+              return (
+                <>
+                  <h1>Organization's Details go here</h1>
+                  <OrganizationDetails organization={org} />
+                </>
+              )
+            } else {
+              return <h1>Loading...</h1>
+            }
+          }}
+        />
+
 
         {/* ------------- Users ------------- */}
         <Route exact path='/profile'>
           <h1>Welcome {currentUser.name}</h1>
+          <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} />
         </Route>
       </Switch>
     </>
