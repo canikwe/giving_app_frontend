@@ -1,15 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Organization from '../components/Organization'
 
-const OrganizationList = () => {
-
-  const [organizations, setOrganizations] = useState([])
-
-  useEffect(() => {
-    fetch('http://localhost:3000/organizations')
-    .then(res => res.json())
-    .then(setOrganizations)
-  }, [])
+const OrganizationList = ({ organizations }) => {
 
   return (
     <div>
