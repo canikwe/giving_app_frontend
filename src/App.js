@@ -127,8 +127,12 @@ function App() {
     })
     .then(res => res.json())
     .then(donation => {
-      const updatedDonations = [...donations, donation]
-      setDonations(updatedDonations)
+      if (donation.id) {
+        const updatedDonations = [...donations, donation]
+        setDonations(updatedDonations)
+      } else {
+        alert(donation.message)
+      }
     })
   }
 
