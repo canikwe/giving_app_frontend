@@ -8,6 +8,7 @@ import Profile from './components/Profile'
 import OrganizationDetails from './components/OrganizationDetails'
 import EventsList from './containers/EventsList'
 import { filterOngoingEvents } from './helperFunctions/givingEvents'
+import EventDetails from './components/EventDetails'
 
 function App() {
   const [organizations, setOrganizations] = useState([])
@@ -37,7 +38,7 @@ function App() {
         'Content-Type': 'application/json',
         'Accepts': 'application/json'
       },
-      body: JSON.stringify(orgObj)
+      body: JSON.stringify({ ...orgObj, admin_id: currentUser.id})
     })
     .then(res => res.json())
     .then(newOrg => {
@@ -69,6 +70,10 @@ function App() {
     return givingEvents.filter(e => e.organization_id === orgId)
   }
 
+  const getOrganization = orgId => {
+    return organizations.find(o => o.id === orgId)
+  }
+
   return (
     <>
       <NavBar />
@@ -91,7 +96,7 @@ function App() {
         </Route>
         <Route exact path='/organizations/new'>
           <h1>Create New Organization</h1>
-          <OrganizationForm currentUserId={currentUser.id} createOrganization={createOrganization} />
+          <OrganizationForm createOrganization={createOrganization} />
         </Route>
         <Route 
           exact 
@@ -101,10 +106,7 @@ function App() {
             
             if (org) {
               return (
-                <>
-                  <h1>Organization's Details go here</h1>
-                  <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} />
-                </>
+                <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} />
               )
             } else {
               return <h1>Loading...</h1>
@@ -113,11 +115,16 @@ function App() {
         />
 
         {/* ------------- Events ------------- */}
-        <Route exact path='/events/:id'>
-          <h1>Event Details</h1>
-  
-        </Route>
+        <Route exact path='/giving_events/:id' render={({ match }) => {
+          const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))
 
+          if (givingEvent) {
+            return <EventDetails event={givingEvent} getOrganization={getOrganization} />
+          } else {
+            return <h1>Loading...</h1>
+          }
+        }} />
+          
         {/* ------------- Users ------------- */}
         <Route exact path='/profile'>
           <h1>Welcome {currentUser.name}</h1>

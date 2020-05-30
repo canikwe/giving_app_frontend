@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
-const OrganizationForm = ({ currentUserId, createOrganization }) => {
+const OrganizationForm = ({ createOrganization }) => {
   const [organization, setOrganization] = useState({
     name: '',
     address: '',
     description: '',
-    admin_id: currentUserId
   })
 
   const handleChange = e => setOrganization({...organization, [e.target.name]: e.target.value})
@@ -15,11 +14,7 @@ const OrganizationForm = ({ currentUserId, createOrganization }) => {
      createOrganization(organization)
   }
 
-  useEffect(() => {
-    setOrganization({ ...organization, admin_id: currentUserId})
-  }, [currentUserId])
-
-  return(
+  return (
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor='name'>Name</label>

@@ -1,18 +1,23 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import EventsList from '../containers/EventsList'
 
 const Organization = ({ organization: { id, name, description, address, giving_events }, getOrgEvents }) => {
   return (
-    <Link to={`/organizations/${id}`} >
-      <div>
-        <h3>{name}</h3>
-        <p>{description}</p>
-        <p>{address}</p>
-        <ul>
-          {getOrgEvents(id).map(g => <li key={g.id}>{g.name}</li>)}
-        </ul>
-      </div>
-    </Link>
+    <div>
+      <Link to={`/organizations/${id}`} >
+        <h2>{name}</h2>
+      </Link>
+
+      { getOrgEvents(id).length ? 
+        <>
+          <h3>Giving Events: </h3>
+          <EventsList events={getOrgEvents(id)} status='' />
+        </>
+        :
+        <h3>No giving events, yet!</h3>
+        }
+    </div>
   )
 }
 
