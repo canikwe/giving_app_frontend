@@ -13,6 +13,7 @@ import EventDetails from './components/EventDetails'
 function App() {
   const [organizations, setOrganizations] = useState([])
   const [givingEvents, setGivingEvents] = useState([])
+  const [donations, setDontations] = useState([])
   const [currentUser, setCurrentUser] = useState({})
   const history = useHistory()
 
@@ -24,6 +25,10 @@ function App() {
     fetch('http://localhost:3000/giving_events')
       .then(res => res.json())
       .then(setGivingEvents)
+
+    fetch('http://localhost:3000/donations')
+      .then(res => res.json())
+      .then(setDontations)
       
       fetch('http://localhost:3000/users/1') //hardcode for now
         .then(res => res.json())
@@ -74,6 +79,10 @@ function App() {
     return organizations.find(o => o.id === orgId)
   }
 
+  const getDonations = givingEventId => {
+    return donations.filter(d => d.id === givingEventId)
+  }
+
   return (
     <>
       <NavBar />
@@ -118,8 +127,8 @@ function App() {
         <Route exact path='/giving_events/:id' render={({ match }) => {
           const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))
 
-          if (givingEvent) {
-            return <EventDetails event={givingEvent} getOrganization={getOrganization} />
+          if (givingEvent && organizations.length) {
+            return <EventDetails event={givingEvent} getOrganization={getOrganization} getDonations={getDonations}/>
           } else {
             return <h1>Loading...</h1>
           }
