@@ -58,6 +58,8 @@ function App() {
       if (newOrg.id) {
         setOrganizations([...organizations, newOrg])
         history.push('/organizations')
+      } else {
+        alert(newOrg.message)
       }
     })
   }
