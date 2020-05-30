@@ -132,8 +132,28 @@ function App() {
     })
   }
 
-  const handleLogin = userObj => {
+  const loginUser = userObj => {
     fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json'
+      },
+      body: JSON.stringify(userObj)
+    })
+    .then(res => res.json())
+    .then(currentUser => {
+      if (currentUser.id) {
+        setCurrentUser(currentUser)
+        setLoginModal(false)
+      } else {
+        alert(currentUser.message)
+      }
+    })
+  }
+
+  const createUser = userObj => {
+    fetch('http://localhost:3000/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -163,6 +183,14 @@ function App() {
 
   const getDonations = givingEventId => {
     return donations.filter(d => d.giving_event_id === givingEventId)
+  }
+
+  const getGivingEvent = givingEventId => {
+    return givingEvents.find(e => e.id === givingEventId)
+  }
+
+  const getUserDonations = () => {
+    return donations.filter(d => d.donor_id === currentUser.id)
   }
 
   const loggedIn = () => currentUser.id ? true : false
@@ -230,12 +258,12 @@ function App() {
           
         {/* ------------- Users ------------- */}
         <Route exact path='/profile'>
-          { loggedIn() ? <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} />
+          {loggedIn() ? <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} userDonations={getUserDonations()} getGivingEvent={getGivingEvent} getOrganization={getOrganization} />
             : <Redirect to='/' />
           }
         </Route>
       </Switch>
-      {loginModal && <LoginForm handleLogin={handleLogin} setLoginModal={setLoginModal}/>}
+      {loginModal && <LoginForm handleLogin={loginUser} handleCreate={createUser} setLoginModal={setLoginModal}/>}
 
     </>
   );
