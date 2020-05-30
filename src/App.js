@@ -82,6 +82,8 @@ function App() {
         const updatedGivingEvents = [...givingEvents, givingEvent]
         setGivingEvents(updatedGivingEvents)
         history.push(`/giving_events/${givingEvent.id}`)
+      } else {
+        alert(givingEvent.message)
       }
 
     })
@@ -107,6 +109,8 @@ function App() {
         const updatedGivingEvents = givingEvents.map(g => g.id === givingEvent.id ? givingEvent : g)
         setGivingEvents(updatedGivingEvents)
         history.push(`/giving_events/${givingEvent.id}`)
+      } else {
+        alert(givingEvent.message)
       }
     })
   }
@@ -199,6 +203,8 @@ function App() {
 
   const loggedIn = () => currentUser.id ? true : false
 
+  const admin = orgId => getOrganization(orgId).admin_id === currentUser.id
+
   return (
     <>
       <NavBar setLoginModal={setLoginModal} loggedIn={loggedIn()}/>
@@ -243,8 +249,9 @@ function App() {
         <Route exact path='/giving_events/:id/edit' render={({ match }) => {
           const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))
 
-          if (givingEvent && organizations.length) {
-            return <EventForm organizationId={null} giving_event={givingEvent} submitForm={updateEvent} />
+           if (givingEvent && organizations.length) {
+
+             return !loggedIn() || !admin(givingEvent.organization_id) ? <Redirect to='/' /> : <EventForm organizationId={null} giving_event={givingEvent} submitForm={updateEvent} />
           } else {
             return <h1>Loading...</h1>
           }
