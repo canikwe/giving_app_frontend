@@ -16,7 +16,7 @@ const Organization = ({ organization: { id, name, description, address, giving_e
         </>
         :
         <h3>No giving events, yet!</h3>
-        }
+      }
     </div>
   )
 }

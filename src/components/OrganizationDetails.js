@@ -22,7 +22,7 @@ const OrganizationDetails = ({ organization: {id, name, description, address}, c
 
       <button onClick={() => setModal(!modal)}>Create a new Giving Event!</button>
 
-      {modal && <EventForm organizationId={id} createEvent={createEvent}/>}
+      {modal && <EventForm organizationId={id} submitForm={createEvent} giving_event={null} />}
     </>
   )
 }

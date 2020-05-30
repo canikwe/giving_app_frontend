@@ -1,15 +1,23 @@
 import React, { useState } from 'react'
 import { parseEventDate } from '../helperFunctions/givingEvents'
 
-const EventForm = ({ organizationId, createEvent }) => {
-  const [givingEvent, updateGivingEvent] = useState({
-    name: '',
-    target_amount: 0,
-    description: '',
-    start_date: parseEventDate(new Date()),
-    end_date: parseEventDate(new Date()),
-    organization_id: organizationId
-  })
+const EventForm = ({ organizationId, submitForm, giving_event }) => {
+  const [givingEvent, updateGivingEvent] = useState(initialState())
+
+  function initialState() {
+    if (organizationId) {
+      return ({
+        name: '',
+        target_amount: 0,
+        description: '',
+        start_date: parseEventDate(new Date()),
+        end_date: parseEventDate(new Date()),
+        organization_id: organizationId
+      })
+    } else {
+      return giving_event
+    }
+  }
 
   const handleChange = e => {
     if (e.target.name === 'target_amount') {
@@ -21,7 +29,7 @@ const EventForm = ({ organizationId, createEvent }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    createEvent(givingEvent)
+    submitForm(givingEvent)
   }
 
   return (
@@ -50,7 +58,7 @@ const EventForm = ({ organizationId, createEvent }) => {
         <label htmlFor='end_date'>End Date:</label>
         <input type='date' name='end_date' value={givingEvent.end_date} onChange={handleChange}/>
       </div>
-      <input type='submit' value='Create Event' />
+      <input type='submit' value={giving_event ? 'Update Event' : 'Create Event'} />
 
     </form>
   )

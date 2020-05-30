@@ -9,11 +9,12 @@ import OrganizationDetails from './components/OrganizationDetails'
 import EventsList from './containers/EventsList'
 import { filterOngoingEvents } from './helperFunctions/givingEvents'
 import EventDetails from './components/EventDetails'
+import EventForm from './containers/EventForm'
 
 function App() {
   const [organizations, setOrganizations] = useState([])
   const [givingEvents, setGivingEvents] = useState([])
-  const [donations, setDontations] = useState([])
+  const [donations, setDonations] = useState([])
   const [currentUser, setCurrentUser] = useState({})
   const history = useHistory()
 
@@ -28,7 +29,7 @@ function App() {
 
     fetch('http://localhost:3000/donations')
       .then(res => res.json())
-      .then(setDontations)
+      .then(setDonations)
       
       fetch('http://localhost:3000/users/1') //hardcode for now
         .then(res => res.json())
@@ -65,8 +66,47 @@ function App() {
     })
     .then(res => res.json())
     .then(givingEvent => {
-      const updatedGivingEvents = [...givingEvents, givingEvent]
-      setGivingEvents(updatedGivingEvents)
+      if (givingEvent.id) {
+        const updatedGivingEvents = [...givingEvents, givingEvent]
+        setGivingEvents(updatedGivingEvents)
+        history.push(`/giving_events/${givingEvent.id}`)
+      }
+
+    })
+  }
+
+  const updateEvent = eventObj => {
+    fetch('http://localhost:3000/giving_events/' + eventObj.id, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json'
+      },
+      body: JSON.stringify(eventObj)
+    })
+    .then(res => res.json())
+    .then(givingEvent => {
+      if (givingEvent.id) {
+        const updatedGivingEvents = givingEvents.map(g => g.id === givingEvent.id ? givingEvent : g)
+        setGivingEvents(updatedGivingEvents)
+        history.push(`/giving_events/${givingEvent.id}`)
+      }
+    })
+  }
+
+  const addDonation = donationObj => {
+    fetch('http://localhost:3000/donations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json'
+      },
+      body: JSON.stringify({ ...donationObj, donor_id: currentUser.id })
+    })
+    .then(res => res.json())
+    .then(donation => {
+      const updatedDonations = [...donations, donation]
+      setDonations(updatedDonations)
     })
   }
 
@@ -80,7 +120,7 @@ function App() {
   }
 
   const getDonations = givingEventId => {
-    return donations.filter(d => d.id === givingEventId)
+    return donations.filter(d => d.giving_event_id === givingEventId)
   }
 
   return (
@@ -124,15 +164,27 @@ function App() {
         />
 
         {/* ------------- Events ------------- */}
-        <Route exact path='/giving_events/:id' render={({ match }) => {
+        <Route exact path='/giving_events/:id/edit' render={({ match }) => {
           const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))
 
           if (givingEvent && organizations.length) {
-            return <EventDetails event={givingEvent} getOrganization={getOrganization} getDonations={getDonations}/>
+            return <EventForm organizationId={null} giving_event={givingEvent} submitForm={updateEvent} />
           } else {
             return <h1>Loading...</h1>
           }
         }} />
+
+        <Route exact path='/giving_events/:id' render={({ match }) => {
+          const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))          
+
+          if (givingEvent && organizations.length) {
+            return <EventDetails event={givingEvent} getOrganization={getOrganization} getDonations={getDonations} addDonation={addDonation} currentUserId={currentUser.id}/>
+          } else {
+            return <h1>Loading...</h1>
+          }
+        }} />
+
+        
           
         {/* ------------- Users ------------- */}
         <Route exact path='/profile'>
