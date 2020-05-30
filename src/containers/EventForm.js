@@ -8,7 +8,7 @@ const EventForm = ({ organizationId, submitForm, giving_event }) => {
     if (organizationId) {
       return ({
         name: '',
-        target_amount: 0,
+        target_amount: 25,
         description: '',
         start_date: parseEventDate(new Date()),
         end_date: parseEventDate(new Date()),
@@ -41,7 +41,7 @@ const EventForm = ({ organizationId, submitForm, giving_event }) => {
 
       <div>
         <label htmlFor='target_amount'>Target Amount:</label>
-        <input type='number' name='target_amount' onChange={handleChange} value={givingEvent.target_amount} />
+        <input type='number' name='target_amount' onChange={handleChange} value={givingEvent.target_amount} step='25' min='0' />
       </div>
 
       <div>

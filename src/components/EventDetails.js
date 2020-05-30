@@ -4,7 +4,7 @@ import moment from 'moment'
 
 const EventDetails = ({event: {id, name, target_amount, description, start_date, end_date, organization_id},  getOrganization, getDonations, addDonation, currentUserId }) => {
   const [donation, setDonation] = useState({
-    amount: 0
+    amount: 10
   })
   const donatedAmount = () => getDonations(id).reduce((a, b) => {
     return a + b.amount
@@ -16,7 +16,7 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
     e.preventDefault()
     
     addDonation({ ...donation, giving_event_id: id })
-    setDonation({amount: 0})
+    setDonation({amount: 10})
   }
 
   const admin = () => getOrganization(organization_id).admin_id === currentUserId
@@ -54,7 +54,7 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
         <h4>Donate Today!</h4>
         <form onSubmit={handleSubmit}>
           <label htmlFor='donation_amount'>Amount: </label>
-          <input type='number' name='amount' value={donation.amount} onChange={handleChange} />
+          <input type='number' name='amount' value={donation.amount} onChange={handleChange} step='25' min='0'/>
           <input type='submit' />
         </form>
       </section>

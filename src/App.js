@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Switch, Route, useHistory} from "react-router-dom"
+import { Switch, Route, useHistory, Redirect} from "react-router-dom"
 import OrganizationsList from './containers/OrganizationsList'
 import NavBar from './components/NavBar'
 import { getUserOrganizations } from './helperFunctions/organizations'
@@ -10,11 +10,13 @@ import EventsList from './containers/EventsList'
 import { filterOngoingEvents } from './helperFunctions/givingEvents'
 import EventDetails from './components/EventDetails'
 import EventForm from './containers/EventForm'
+import LoginForm from './components/LoginForm'
 
 function App() {
   const [organizations, setOrganizations] = useState([])
   const [givingEvents, setGivingEvents] = useState([])
   const [donations, setDonations] = useState([])
+  const [loginModal, setLoginModal] = useState(false)
   const [currentUser, setCurrentUser] = useState({})
   const history = useHistory()
 
@@ -31,13 +33,18 @@ function App() {
       .then(res => res.json())
       .then(setDonations)
       
-      fetch('http://localhost:3000/users/1') //hardcode for now
-        .then(res => res.json())
-        .then(setCurrentUser)
+      // fetch('http://localhost:3000/users/1') //hardcode for now
+      //   .then(res => res.json())
+      //   .then(setCurrentUser)
 
   }, [])
 
   const createOrganization = orgObj => {
+    if (!currentUser.id) {
+      setLoginModal(true)
+      return alert('Please sign in first!')
+    }
+
     fetch('http://localhost:3000/organizations', {
       method: 'POST',
       headers: {
@@ -56,6 +63,11 @@ function App() {
   }
 
   const createEvent = eventObj => {
+    if (!currentUser.id) {
+      setLoginModal(true)
+      return alert('Please sign in first!')
+    }
+
     fetch('http://localhost:3000/giving_events', {
       method: 'POST',
       headers: {
@@ -76,6 +88,11 @@ function App() {
   }
 
   const updateEvent = eventObj => {
+    if (!currentUser.id) {
+      setLoginModal(true)
+      return alert('Please sign in first!')
+    }
+
     fetch('http://localhost:3000/giving_events/' + eventObj.id, {
       method: 'PATCH',
       headers: {
@@ -95,6 +112,11 @@ function App() {
   }
 
   const addDonation = donationObj => {
+    if (!currentUser.id) {
+      setLoginModal(true)
+      return alert('Please sign in first!')
+    }
+
     fetch('http://localhost:3000/donations', {
       method: 'POST',
       headers: {
@@ -107,6 +129,26 @@ function App() {
     .then(donation => {
       const updatedDonations = [...donations, donation]
       setDonations(updatedDonations)
+    })
+  }
+
+  const handleLogin = userObj => {
+    fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json'
+      },
+      body: JSON.stringify(userObj)
+    })
+    .then(res => res.json())
+    .then(currentUser => {
+      if (currentUser.id) {
+        setCurrentUser(currentUser)
+        setLoginModal(false)
+      } else {
+        alert(currentUser.message)
+      }
     })
   }
 
@@ -123,9 +165,11 @@ function App() {
     return donations.filter(d => d.giving_event_id === givingEventId)
   }
 
+  const loggedIn = () => currentUser.id ? true : false
+
   return (
     <>
-      <NavBar />
+      <NavBar setLoginModal={setLoginModal} loggedIn={loggedIn()}/>
       <Switch>
         <Route exact path='/'>
           <>
@@ -183,15 +227,16 @@ function App() {
             return <h1>Loading...</h1>
           }
         }} />
-
-        
           
         {/* ------------- Users ------------- */}
         <Route exact path='/profile'>
-          <h1>Welcome {currentUser.name}</h1>
-          <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} />
+          { loggedIn() ? <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} />
+            : <Redirect to='/' />
+          }
         </Route>
       </Switch>
+      {loginModal && <LoginForm handleLogin={handleLogin} setLoginModal={setLoginModal}/>}
+
     </>
   );
 }
