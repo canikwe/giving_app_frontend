@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { Switch, Route, useHistory} from "react-router-dom"
 import OrganizationsList from './containers/OrganizationsList'
 import NavBar from './components/NavBar'
-import { getCurrentOrganizations, getUserOrganizations } from './helperFunctions/organizations'
+import { getUserOrganizations } from './helperFunctions/organizations'
 import OrganizationForm from './containers/OrganizationForm'
 import Profile from './components/Profile'
 import OrganizationDetails from './components/OrganizationDetails'
+import EventsList from './containers/EventsList'
+import { filterOngoingEvents } from './helperFunctions/givingEvents'
 
 function App() {
   const [organizations, setOrganizations] = useState([])
+  const [givingEvents, setGivingEvents] = useState([])
   const [currentUser, setCurrentUser] = useState({})
   const history = useHistory()
 
@@ -16,6 +19,10 @@ function App() {
     fetch('http://localhost:3000/organizations')
       .then(res => res.json())
       .then(setOrganizations)
+
+    fetch('http://localhost:3000/giving_events')
+      .then(res => res.json())
+      .then(setGivingEvents)
       
       fetch('http://localhost:3000/users/1') //hardcode for now
         .then(res => res.json())
@@ -23,12 +30,12 @@ function App() {
 
   }, [])
 
-  const createOrganization = (orgObj) => {
+  const createOrganization = orgObj => {
     fetch('http://localhost:3000/organizations', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accepts': 'application/json()'
+        'Accepts': 'application/json'
       },
       body: JSON.stringify(orgObj)
     })
@@ -41,6 +48,27 @@ function App() {
     })
   }
 
+  const createEvent = eventObj => {
+    fetch('http://localhost:3000/giving_events', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json'
+      },
+      body: JSON.stringify(eventObj)
+    })
+    .then(res => res.json())
+    .then(givingEvent => {
+      const updatedGivingEvents = [...givingEvents, givingEvent]
+      setGivingEvents(updatedGivingEvents)
+    })
+  }
+
+// ------------ Helper Functions ------------
+  const getOrgEvents = orgId => {
+    return givingEvents.filter(e => e.organization_id === orgId)
+  }
+
   return (
     <>
       <NavBar />
@@ -50,14 +78,15 @@ function App() {
             <header className="App-header">
               <h1>My Awesome Giving App</h1>
             </header>
-            <OrganizationsList organizations={getCurrentOrganizations(organizations)}/>
+            <EventsList events={filterOngoingEvents(givingEvents)} status='Ongoing Events' />
           </>
         </Route>
+
         {/* --------- Organizations --------- */}
         <Route exact path='/organizations'>
           <>
             <h1>Organizations</h1>
-            <OrganizationsList organizations={organizations} />
+            <OrganizationsList organizations={organizations} getOrgEvents={getOrgEvents} />
           </>
         </Route>
         <Route exact path='/organizations/new'>
@@ -74,7 +103,7 @@ function App() {
               return (
                 <>
                   <h1>Organization's Details go here</h1>
-                  <OrganizationDetails organization={org} />
+                  <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} />
                 </>
               )
             } else {
@@ -83,11 +112,16 @@ function App() {
           }}
         />
 
+        {/* ------------- Events ------------- */}
+        <Route exact path='/events/:id'>
+          <h1>Event Details</h1>
+  
+        </Route>
 
         {/* ------------- Users ------------- */}
         <Route exact path='/profile'>
           <h1>Welcome {currentUser.name}</h1>
-          <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} />
+          <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} />
         </Route>
       </Switch>
     </>
