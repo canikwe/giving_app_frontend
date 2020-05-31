@@ -7,12 +7,13 @@ import OrganizationForm from './containers/OrganizationForm'
 import Profile from './components/Profile'
 import OrganizationDetails from './components/OrganizationDetails'
 import EventsList from './containers/EventsList'
-import { filterOngoingEvents } from './helperFunctions/givingEvents'
+import { filterOngoingEvents, filterFinishedEvents, filterUpcomingEvents } from './helperFunctions/givingEvents'
 import EventDetails from './components/EventDetails'
 import EventForm from './containers/EventForm'
 import LoginForm from './components/LoginForm'
 import Calendar from './components/Calendar'
 import './App.css'
+import Filters from './components/Filters'
 
 function App() {
   const [organizations, setOrganizations] = useState([])
@@ -20,6 +21,7 @@ function App() {
   const [donations, setDonations] = useState([])
   const [loginModal, setLoginModal] = useState(false)
   const [currentUser, setCurrentUser] = useState({})
+  const [filters, setFilters] = useState({searchTerm: '', sort: 'none', date: 'all'})
   const history = useHistory()
 
   useEffect(() => {
@@ -184,7 +186,28 @@ function App() {
     })
   }
 
+// ---------------- Filters ----------------
+
+  const filterBySearchTerm = () => {
+    return givingEvents.filter(e => e.name.toLowerCase().includes(filters.searchTerm.toLowerCase()))
+  }
+
+  const filterByDate = () => {
+    switch (filters.date) {
+      case 'finished':
+        return filterFinishedEvents(filterBySearchTerm())
+      case 'ongoing':
+        return filterOngoingEvents(filterBySearchTerm())
+      case 'upcoming':
+        return filterUpcomingEvents(filterBySearchTerm())
+      default:
+        return filterBySearchTerm()
+    }
+  }
+
 // ------------ Helper Functions ------------
+
+
   const getOrgEvents = orgId => {
     return givingEvents.filter(e => e.organization_id === orgId)
   }
@@ -214,21 +237,17 @@ function App() {
       <NavBar setLoginModal={setLoginModal} loggedIn={loggedIn()}/>
       <Switch>
         <Route exact path='/'>
-          <>
-            <header className="App-header">
-              <h1>My Awesome Giving App</h1>
-            </header>
-            <Calendar events={givingEvents} />
-            {/* <EventsList events={filterOngoingEvents(givingEvents)} status='Ongoing Events' /> */}
-          </>
+          <header className="App-header">
+            <h1>My Awesome Giving App</h1>
+          </header>
+          <Calendar events={givingEvents} />
+          {/* <EventsList events={filterOngoingEvents(givingEvents)} status='Ongoing Events' /> */}
         </Route>
 
         {/* --------- Organizations --------- */}
         <Route exact path='/organizations'>
-          <>
-            <h1>Organizations</h1>
-            <OrganizationsList organizations={organizations} getOrgEvents={getOrgEvents} />
-          </>
+          <h1>Organizations</h1>
+          <OrganizationsList organizations={organizations} getOrgEvents={getOrgEvents} />
         </Route>
         <Route exact path='/organizations/new'>
           <h1>Create New Organization</h1>
@@ -241,8 +260,10 @@ function App() {
             const org = organizations.find(o => o.id === parseInt(props.match.params.id))
             
             if (org) {
+              const showNewForm = currentUser.id ? admin(org.id) : true
+              
               return (
-                <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} />
+                <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} showNewForm={showNewForm}/>
               )
             } else {
               return <h1>Loading...</h1>
@@ -251,6 +272,11 @@ function App() {
         />
 
         {/* ------------- Events ------------- */}
+        <Route exact path='/giving_events'>
+          <Filters filters={filters} setFilters={setFilters} />
+          <EventsList events={filterByDate()} />
+        </Route>
+
         <Route exact path='/giving_events/:id/edit' render={({ match }) => {
           const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))
 
@@ -274,7 +300,7 @@ function App() {
           
         {/* ------------- Users ------------- */}
         <Route exact path='/profile'>
-          {loggedIn() ? <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} userDonations={getUserDonations()} getGivingEvent={getGivingEvent} getOrganization={getOrganization} />
+          {loggedIn() ? <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} userDonations={getUserDonations()} getGivingEvent={getGivingEvent} getOrganization={getOrganization} createEvent={createEvent}/>
             : <Redirect to='/' />
           }
         </Route>

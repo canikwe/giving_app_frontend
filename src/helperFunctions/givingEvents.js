@@ -10,3 +10,5 @@ export const eventIsUpcoming = e => moment().isBefore(e.start_date)
 export const filterUpcomingEvents = events => events.filter(eventIsUpcoming)
 
 export const parseEventDate = date => moment(date).format('YYYY-MM-DD')
+
+export const formatEventDate = date => moment(date).format('MMMM Do')

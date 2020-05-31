@@ -6,16 +6,16 @@ const Organization = ({ organization: { id, name, description, address, giving_e
   return (
     <div>
       <Link to={`/organizations/${id}`} >
-        <h2>{name}</h2>
+        <p>{name}</p>
       </Link>
 
       { getOrgEvents(id).length ? 
         <>
-          <h3>Giving Events: </h3>
+          <p>Giving Events: </p>
           <EventsList events={getOrgEvents(id)} status='' />
         </>
         :
-        <h3>No giving events, yet!</h3>
+        <p>No giving events, yet!</p>
       }
     </div>
   )

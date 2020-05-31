@@ -3,7 +3,7 @@ import { filterOngoingEvents, filterFinishedEvents, filterUpcomingEvents } from 
 import EventsList from '../containers/EventsList'
 import EventForm from '../containers/EventForm'
 
-const OrganizationDetails = ({ organization: {id, name, description, address}, createEvent, getOrgEvents }) => {
+const OrganizationDetails = ({ organization: { id, name, description, address }, createEvent, getOrgEvents, showNewForm }) => {
   const [modal, setModal] = useState(false)
   return (
     <>
@@ -11,7 +11,7 @@ const OrganizationDetails = ({ organization: {id, name, description, address}, c
       <p>{description}</p>
       <p>{address}</p>
 
-      <h4>Current Events</h4>
+      <h4>Ongoing Events</h4>
       <EventsList events={filterOngoingEvents(getOrgEvents(id))} status='still going'/>
 
       <h4>Upcoming Events</h4>
@@ -20,7 +20,7 @@ const OrganizationDetails = ({ organization: {id, name, description, address}, c
       <h4>Past Events</h4>
       <EventsList events={filterFinishedEvents(getOrgEvents(id))} status='finished!'/>
 
-      <button onClick={() => setModal(!modal)}>Create a new Giving Event!</button>
+      { showNewForm && <button onClick={() => setModal(!modal)}>Create a new Giving Event!</button> }
 
       {modal && <EventForm organizationId={id} submitForm={createEvent} giving_event={null} />}
     </>

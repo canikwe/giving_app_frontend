@@ -25,7 +25,11 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
     <>
       <section>
         <h1>{name}</h1>
-        <h2>Organized by: { getOrganization(organization_id).name }</h2>
+
+        <h4>
+          Organized for: <Link to={`/organizations/${organization_id}`}>{getOrganization(organization_id).name} </Link>
+        </h4>
+       
         <p>Target Amount: {target_amount}</p>
         <p>${target_amount - donatedAmount()} more to go!</p>
         <p>{getDonations(id).length} donations so far</p>

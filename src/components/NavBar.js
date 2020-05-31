@@ -7,6 +7,7 @@ const NavBar = ({ setLoginModal, loggedIn }) => {
       <Link to='/'>Home</Link>
       <Link to='/organizations'>Organizations</Link>
       <Link to='/organizations/new'>Create New Org</Link>
+      <Link to='/giving_events'>Giving Events</Link>
       { loggedIn ? <Link to='/profile'>Profile</Link>
         :
       <button onClick={() => setLoginModal(true)}>Login</button>}

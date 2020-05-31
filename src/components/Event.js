@@ -1,13 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { formatEventDate } from '../helperFunctions/givingEvents'
 
-const Event = ({ event, status }) => {
+
+const Event = ({ event }) => {
   return (
-    <Link to={`/giving_events/${event.id}`}>
-      <li>
-        {event.name} - {status}
+    <li>
+      <Link to={`/giving_events/${event.id}`}>{event.name}</Link> - {formatEventDate(event.start_date)}
       </li>
-    </Link>
   )
 }
 
