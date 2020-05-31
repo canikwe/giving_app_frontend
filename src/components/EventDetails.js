@@ -28,6 +28,16 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
       <section>
         <h1>{name}</h1>
 
+        {
+          admin() && (
+            <section>
+              <Link to={`/giving_events/${id}/edit`}>
+                <Button floated='right'>Update Event</Button>
+              </Link>
+            </section>
+          )
+        }
+
         <h4>
           Organized for: <Link to={`/organizations/${organization_id}`}>{getOrganization(organization_id).name} </Link>
         </h4>
@@ -57,17 +67,6 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
       </section>
 
       <Divider />
-
-      {
-        admin() && (
-          <section>
-            <Link to={`/giving_events/${id}/edit`}>
-              <button>Update Event</button>
-            </Link>
-          </section>
-        )
-      }
-      
 
       <section>
         <h4>Donate Today!</h4>

@@ -18,7 +18,7 @@ const Profile = ({ user, organizations, getOrgEvents, userDonations, getGivingEv
   return (
     <div>
       <h1>Welcome {user.name}</h1>
-      <h3>Donations: </h3>
+      <h3>My Donations: </h3>
       <ul>
         {userDonations.map(d => <li key={d.id}>You gave ${d.amount} to {renderOrgName(d)}</li>) }
       </ul>
