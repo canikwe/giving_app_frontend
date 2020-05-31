@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { parseEventDate } from '../helperFunctions/givingEvents'
+import { Segment, Form, Button, Header } from 'semantic-ui-react'
 
 const EventForm = ({ organizationId, submitForm, giving_event }) => {
   const [givingEvent, updateGivingEvent] = useState(initialState())
@@ -33,34 +34,37 @@ const EventForm = ({ organizationId, submitForm, giving_event }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor='name'>Name:</label>
-        <input type='text' name='name' onChange={handleChange} value={givingEvent.name} />
-      </div>
+    <Segment>
+      <Header>Create a New Event</Header>
+      <Form onSubmit={handleSubmit}>
+        <Form.Field>
+          <label htmlFor='name'>Name:</label>
+          <input type='text' name='name' onChange={handleChange} value={givingEvent.name} />
+        </Form.Field>
 
-      <div>
-        <label htmlFor='target_amount'>Target Amount:</label>
-        <input type='number' name='target_amount' onChange={handleChange} value={givingEvent.target_amount} step='10' min='10' required />
-      </div>
+        <Form.Field>
+          <label htmlFor='target_amount'>Target Amount:</label>
+          <input type='number' name='target_amount' onChange={handleChange} value={givingEvent.target_amount} step='10' min='10' required />
+        </Form.Field>
 
-      <div>
-        <label htmlFor='description'>Description:</label>
-        <textarea name='description' onChange={handleChange} value={givingEvent.description} />
-      </div>
+        <Form.Field>
+          <label htmlFor='description'>Description:</label>
+          <textarea name='description' onChange={handleChange} value={givingEvent.description} />
+        </Form.Field>
 
-      <div>
-        <label htmlFor='start_date'>Start Date:</label>
-        <input type='date' name='start_date' value={givingEvent.start_date} onChange={handleChange}/>
-      </div>
+        <Form.Field>
+          <label htmlFor='start_date'>Start Date:</label>
+          <input type='date' name='start_date' value={givingEvent.start_date} onChange={handleChange}/>
+        </Form.Field>
 
-      <div>
-        <label htmlFor='end_date'>End Date:</label>
-        <input type='date' name='end_date' value={givingEvent.end_date} onChange={handleChange}/>
-      </div>
-      <input type='submit' value={giving_event ? 'Update Event' : 'Create Event'} />
+        <Form.Field>
+          <label htmlFor='end_date'>End Date:</label>
+          <input type='date' name='end_date' value={givingEvent.end_date} onChange={handleChange}/>
+        </Form.Field>
+        <Button type='submit'>{giving_event ? 'Update Event' : 'Create Event'} </Button>
 
-    </form>
+      </Form>
+    </Segment>
   )
 }
 
