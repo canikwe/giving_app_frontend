@@ -12,3 +12,12 @@ export const filterUpcomingEvents = events => events.filter(eventIsUpcoming)
 export const parseEventDate = date => moment(date).format('YYYY-MM-DD')
 
 export const formatEventDate = date => moment(date).format('MMMM Do')
+
+// export const formatAmount = amount => {
+//   const stringAmt = amount.toString()
+//   if (stringAmt.length > 3) {
+//     for (let i = stringAmt.length - 1; i > 0; i = i - 3) {
+
+//     }
+//   }
+// }
