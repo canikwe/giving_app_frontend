@@ -235,7 +235,7 @@ function App() {
 
   return (
     <>
-      <NavBar setLoginModal={setLoginModal} loggedIn={loggedIn()}/>
+      <NavBar setLoginModal={setLoginModal} loggedIn={loggedIn()} setCurrentUser={setCurrentUser}/>
       <Switch>
         <Route exact path='/'>
           <header className="App-header">

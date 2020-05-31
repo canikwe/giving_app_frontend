@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link, useLocation } from "react-router-dom"
-import { Menu, Button } from 'semantic-ui-react'
+import { Menu, Button, Icon } from 'semantic-ui-react'
 
-const NavBar = ({ setLoginModal, loggedIn }) => {
+const NavBar = ({ setLoginModal, loggedIn, setCurrentUser }) => {
   const location = useLocation()
 
   return (
@@ -42,19 +42,27 @@ const NavBar = ({ setLoginModal, loggedIn }) => {
 
       <Menu.Menu position='right'>
 
-      {loggedIn ? <Menu.Item
-        name='profile'
-        active={location.pathname === '/profile'}
-        as={Link}
-        to='/profile'
-        >
-        Profile
-        </Menu.Item>
-        :
+      {loggedIn ? (
+        <>
+          <Menu.Item
+            name='profile'
+            active={location.pathname === '/profile'}
+            as={Link}
+            to='/profile'
+          >
+            Profile
+          </Menu.Item>
+          <Menu.Item
+            onClick={() => setCurrentUser({})}
+          >
+            <Icon name='sign-out' />
+          </Menu.Item>
+        </>
+      ) : (
         <Menu.Item>
           <Button onClick={() => setLoginModal(true)}>Login</Button>
         </Menu.Item>
-      }
+      )}
       </Menu.Menu>
     </Menu>
   )

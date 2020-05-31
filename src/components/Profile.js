@@ -22,7 +22,7 @@ const Profile = ({ user, organizations, getOrgEvents, userDonations, getGivingEv
       <ul>
         {userDonations.map(d => <li key={d.id}>You gave ${d.amount} to {renderOrgName(d)}</li>) }
       </ul>
-
+      <h3>My Organizations</h3>
       <OrganizationList organizations={organizations} getOrgEvents={getOrgEvents} createEvent={createEvent} />
       {/* { organizations.map(o => (
         <li key={o.id}>
