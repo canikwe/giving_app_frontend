@@ -12,8 +12,9 @@ import EventDetails from './components/EventDetails'
 import EventForm from './containers/EventForm'
 import LoginForm from './components/LoginForm'
 import Calendar from './components/Calendar'
-import './App.css'
 import Filters from './components/Filters'
+import './App.css'
+import 'semantic-ui-css/semantic.min.css'
 
 function App() {
   const [organizations, setOrganizations] = useState([])
