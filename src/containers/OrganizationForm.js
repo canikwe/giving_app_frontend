@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Segment, Form, Button } from 'semantic-ui-react'
 
 const OrganizationForm = ({ createOrganization }) => {
   const [organization, setOrganization] = useState({
@@ -15,21 +16,26 @@ const OrganizationForm = ({ createOrganization }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <Segment size='large'>
+    <Form onSubmit={handleSubmit}>
+      <Form.Field>
         <label htmlFor='name'>Name</label>
         <input name='name' type='text' value={organization.name} onChange={handleChange} />
-      </div>
-      <div>
+      </Form.Field>
+      <Form.Field>
         <label htmlFor='address'>Address</label>
        <input name='address' type='text' value={organization.address} onChange={handleChange} />
-      </div>
-      <div>
-        <label htmlFor='description'>Description</label>
-        <input name='description' type='text' value={organization.description} onChange={handleChange} />
-      </div>
-      <input type='submit' />
-    </form>
+      </Form.Field>
+      <Form.TextArea 
+        label='Description' 
+        placeholder='Tell us more about your organization...' 
+        name='description' 
+        value={organization.description} 
+        onChange={handleChange} 
+      />
+      <Button type='submit'>Submit</Button>
+    </Form>
+    </Segment>
   )
 
 }
