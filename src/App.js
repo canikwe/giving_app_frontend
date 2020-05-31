@@ -306,7 +306,7 @@ function App() {
           }
         </Route>
       </Switch>
-      {loginModal && <LoginForm handleLogin={loginUser} handleCreate={createUser} setLoginModal={setLoginModal}/>}
+      {loginModal && <LoginForm handleLogin={loginUser} handleCreate={createUser} setLoginModal={setLoginModal} loginModal={loginModal}/>}
 
     </>
   );
