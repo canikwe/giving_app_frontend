@@ -58,7 +58,7 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
         <h4>Donate Today!</h4>
         <form onSubmit={handleSubmit}>
           <label htmlFor='donation_amount'>Amount: </label>
-          <input type='number' name='amount' value={donation.amount} onChange={handleChange} step='25' min='0'/>
+          <input type='number' name='amount' value={donation.amount} onChange={handleChange} step='10' min='0'required />
           <input type='submit' />
         </form>
       </section>
