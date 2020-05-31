@@ -274,6 +274,7 @@ function App() {
 
         {/* ------------- Events ------------- */}
         <Route exact path='/giving_events'>
+          <h1>Giving Events</h1>
           <Filters filters={filters} setFilters={setFilters} />
           <EventsList events={filterByDate()} />
         </Route>
