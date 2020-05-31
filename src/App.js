@@ -11,6 +11,8 @@ import { filterOngoingEvents } from './helperFunctions/givingEvents'
 import EventDetails from './components/EventDetails'
 import EventForm from './containers/EventForm'
 import LoginForm from './components/LoginForm'
+import Calendar from './components/Calendar'
+import './App.css'
 
 function App() {
   const [organizations, setOrganizations] = useState([])
@@ -216,7 +218,8 @@ function App() {
             <header className="App-header">
               <h1>My Awesome Giving App</h1>
             </header>
-            <EventsList events={filterOngoingEvents(givingEvents)} status='Ongoing Events' />
+            <Calendar events={givingEvents} />
+            {/* <EventsList events={filterOngoingEvents(givingEvents)} status='Ongoing Events' /> */}
           </>
         </Route>
 
