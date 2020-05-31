@@ -236,77 +236,79 @@ function App() {
   return (
     <>
       <NavBar setLoginModal={setLoginModal} loggedIn={loggedIn()} setCurrentUser={setCurrentUser}/>
-      <Switch>
-        <Route exact path='/'>
-          <header className="App-header">
-            <h1>My Awesome Giving App</h1>
-          </header>
-          <Calendar events={givingEvents} />
-          {/* <EventsList events={filterOngoingEvents(givingEvents)} status='Ongoing Events' /> */}
-        </Route>
+      <div className='wrapper'>
+        <Switch>
+          <Route exact path='/'>
+            <header className="App-header">
+              <h1>My Awesome Giving App</h1>
+            </header>
+            <Calendar events={givingEvents} />
+            {/* <EventsList events={filterOngoingEvents(givingEvents)} status='Ongoing Events' /> */}
+          </Route>
 
-        {/* --------- Organizations --------- */}
-        <Route exact path='/organizations'>
-          <h1>Organizations</h1>
-          <OrganizationsList organizations={organizations} getOrgEvents={getOrgEvents} />
-        </Route>
-        <Route exact path='/organizations/new'>
-          <h1>Create New Organization</h1>
-          <OrganizationForm createOrganization={createOrganization} />
-        </Route>
-        <Route 
-          exact 
-          path='/organizations/:id' 
-          render={props => {
-            const org = organizations.find(o => o.id === parseInt(props.match.params.id))
-            
-            if (org) {
-              const showNewForm = currentUser.id ? admin(org.id) : true
+          {/* --------- Organizations --------- */}
+          <Route exact path='/organizations'>
+            <h1>Organizations</h1>
+            <OrganizationsList organizations={organizations} getOrgEvents={getOrgEvents} />
+          </Route>
+          <Route exact path='/organizations/new'>
+            <h1>Create New Organization</h1>
+            <OrganizationForm createOrganization={createOrganization} />
+          </Route>
+          <Route 
+            exact 
+            path='/organizations/:id' 
+            render={props => {
+              const org = organizations.find(o => o.id === parseInt(props.match.params.id))
               
-              return (
-                <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} showNewForm={showNewForm} getDonations={getDonations}/>
-              )
+              if (org) {
+                const showNewForm = currentUser.id ? admin(org.id) : true
+                
+                return (
+                  <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} showNewForm={showNewForm} getDonations={getDonations}/>
+                )
+              } else {
+                return <h1>Loading...</h1>
+              }
+            }}
+          />
+
+          {/* ------------- Events ------------- */}
+          <Route exact path='/giving_events'>
+            <h1>Giving Events</h1>
+            <Filters filters={filters} setFilters={setFilters} />
+            <EventsList events={filterByDate()} getDonations={getDonations} />
+          </Route>
+
+          <Route exact path='/giving_events/:id/edit' render={({ match }) => {
+            const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))
+
+            if (givingEvent && organizations.length) {
+
+              return !loggedIn() || !admin(givingEvent.organization_id) ? <Redirect to='/' /> : <EventForm organizationId={null} giving_event={givingEvent} submitForm={updateEvent} />
             } else {
               return <h1>Loading...</h1>
             }
-          }}
-        />
+          }} />
 
-        {/* ------------- Events ------------- */}
-        <Route exact path='/giving_events'>
-          <h1>Giving Events</h1>
-          <Filters filters={filters} setFilters={setFilters} />
-          <EventsList events={filterByDate()} getDonations={getDonations} />
-        </Route>
+          <Route exact path='/giving_events/:id' render={({ match }) => {
+            const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))          
 
-        <Route exact path='/giving_events/:id/edit' render={({ match }) => {
-          const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))
-
-           if (givingEvent && organizations.length) {
-
-             return !loggedIn() || !admin(givingEvent.organization_id) ? <Redirect to='/' /> : <EventForm organizationId={null} giving_event={givingEvent} submitForm={updateEvent} />
-          } else {
-            return <h1>Loading...</h1>
-          }
-        }} />
-
-        <Route exact path='/giving_events/:id' render={({ match }) => {
-          const givingEvent = givingEvents.find(e => e.id === parseInt(match.params.id))          
-
-          if (givingEvent && organizations.length) {
-            return <EventDetails event={givingEvent} getOrganization={getOrganization} getDonations={getDonations} addDonation={addDonation} currentUserId={currentUser.id}/>
-          } else {
-            return <h1>Loading...</h1>
-          }
-        }} />
-          
-        {/* ------------- Users ------------- */}
-        <Route exact path='/profile'>
-          {loggedIn() ? <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} userDonations={getUserDonations()} getGivingEvent={getGivingEvent} getOrganization={getOrganization} createEvent={createEvent}/>
-            : <Redirect to='/' />
-          }
-        </Route>
-      </Switch>
+            if (givingEvent && organizations.length) {
+              return <EventDetails event={givingEvent} getOrganization={getOrganization} getDonations={getDonations} addDonation={addDonation} currentUserId={currentUser.id}/>
+            } else {
+              return <h1>Loading...</h1>
+            }
+          }} />
+            
+          {/* ------------- Users ------------- */}
+          <Route exact path='/profile'>
+            {loggedIn() ? <Profile user={currentUser} organizations={getUserOrganizations(currentUser.id, organizations)} getOrgEvents={getOrgEvents} userDonations={getUserDonations()} getGivingEvent={getGivingEvent} getOrganization={getOrganization} createEvent={createEvent}/>
+              : <Redirect to='/' />
+            }
+          </Route>
+        </Switch>
+      </div>
       {loginModal && <LoginForm handleLogin={loginUser} handleCreate={createUser} setLoginModal={setLoginModal} loginModal={loginModal}/>}
 
     </>

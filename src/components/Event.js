@@ -4,7 +4,6 @@ import { formatEventDate, eventIsOngoing } from '../helperFunctions/givingEvents
 import { Table, Label } from 'semantic-ui-react'
 
 const Event = ({ event, getDonations }) => {
-  console.log(event)
   return (
     <Table.Row>
       <Table.Cell>
