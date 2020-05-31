@@ -264,7 +264,7 @@ function App() {
               const showNewForm = currentUser.id ? admin(org.id) : true
               
               return (
-                <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} showNewForm={showNewForm}/>
+                <OrganizationDetails organization={org} createEvent={createEvent} getOrgEvents={getOrgEvents} showNewForm={showNewForm} getDonations={getDonations}/>
               )
             } else {
               return <h1>Loading...</h1>
@@ -276,7 +276,7 @@ function App() {
         <Route exact path='/giving_events'>
           <h1>Giving Events</h1>
           <Filters filters={filters} setFilters={setFilters} />
-          <EventsList events={filterByDate()} />
+          <EventsList events={filterByDate()} getDonations={getDonations} />
         </Route>
 
         <Route exact path='/giving_events/:id/edit' render={({ match }) => {
