@@ -7,7 +7,7 @@ import OrganizationForm from './containers/OrganizationForm'
 import Profile from './components/Profile'
 import OrganizationDetails from './components/OrganizationDetails'
 import EventsList from './containers/EventsList'
-import { filterOngoingEvents, filterFinishedEvents, filterUpcomingEvents } from './helperFunctions/givingEvents'
+import { filterOngoingEvents, filterFinishedEvents, filterUpcomingEvents, sortEvents } from './helperFunctions/givingEvents'
 import EventDetails from './components/EventDetails'
 import EventForm from './containers/EventForm'
 import LoginForm from './components/LoginForm'
@@ -277,7 +277,7 @@ function App() {
           <Route exact path='/giving_events'>
             <h1>Giving Events</h1>
             <Filters filters={filters} setFilters={setFilters} />
-            <EventsList events={filterByDate()} getDonations={getDonations} />
+            <EventsList events={sortEvents(filterByDate())} getDonations={getDonations} />
           </Route>
 
           <Route exact path='/giving_events/:id/edit' render={({ match }) => {

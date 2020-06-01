@@ -13,11 +13,12 @@ export const parseEventDate = date => moment(date).format('YYYY-MM-DD')
 
 export const formatEventDate = date => moment(date).format('MMMM Do')
 
-// export const formatAmount = amount => {
-//   const stringAmt = amount.toString()
-//   if (stringAmt.length > 3) {
-//     for (let i = stringAmt.length - 1; i > 0; i = i - 3) {
-
-//     }
-//   }
-// }
+export const sortEvents = (givingEvents) => {
+  return [...givingEvents].sort((a, b) => {
+    if (!eventIsFinished(a) && !eventIsFinished(b) ) {
+      return moment(a.start_date) > moment(b.start_date) ? 1 : -1
+    }
+    return eventIsFinished(a) ? 1 : -1
+  })
+  
+}

@@ -62,20 +62,36 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
 
       <section>
         <h3>Giving Event Dates:</h3>
-        Starting on {moment(start_date).format('MMM Do, YYYY')} <br />
-        Ending on {moment(end_date).format('MMM Do, YYYY')}
+        {start_date === end_date ? (
+          <div>
+            {moment(start_date).format('MMM Do, YYYY')}
+          </div>
+          ) : (
+          <>
+            <div>
+              From {moment(start_date).format('MMM Do, YYYY')} 
+            </div>
+            <div>
+              to {moment(end_date).format('MMM Do, YYYY')}
+            </div>
+          </>
+        )}
       </section>
 
       <Divider />
 
-      <section>
-        <h4>Donate Today!</h4>
-        <Form onSubmit={handleSubmit}>
-          <label htmlFor='donation_amount'>Amount: </label>
-          <input type='number' name='amount' value={donation.amount} onChange={handleChange} step='10' min='0'required />
-          <Button type='submit'>Submit</Button>
-        </Form>
-      </section>
+       {
+         moment().isBetween(start_date, end_date) && 
+          <section>
+            <h4>Donate Today!</h4>
+            <Form onSubmit={handleSubmit}>
+              <label htmlFor='donation_amount'>Amount: </label>
+              <input type='number' name='amount' value={donation.amount} onChange={handleChange} step='10' min='0'required />
+              <Button type='submit'>Submit</Button>
+            </Form>
+          </section>
+       }
+
     </Segment>
   )
 }
