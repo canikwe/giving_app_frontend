@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import EventsList from '../containers/EventsList'
 import { Card, Icon } from 'semantic-ui-react'
 import { eventIsOngoing } from '../helperFunctions/givingEvents'
 

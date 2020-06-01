@@ -8,9 +8,6 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
   const [donation, setDonation] = useState({
     amount: 10
   })
-  const donatedAmount = () => getDonations(id).reduce((a, b) => {
-    return a + b.amount
-  }, 0)
 
   const handleChange = e => setDonation({amount: parseInt(e.target.value)})
 
@@ -50,7 +47,7 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
        
        {
           getDonations(id).length ?
-            <p>{getDonations(id).length} donations so far <span>🎉</span></p>
+            <p>{getDonations(id).length} donations so far <span role='img' aria-label='confetti'>🎉</span></p>
             :
             <p>No donations so far <Icon name='frown outline' /></p>
        }

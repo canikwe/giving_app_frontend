@@ -243,7 +243,6 @@ function App() {
               <h1>My Awesome Giving App</h1>
             </header>
             <Calendar events={givingEvents} />
-            {/* <EventsList events={filterOngoingEvents(givingEvents)} status='Ongoing Events' /> */}
           </Route>
 
           {/* --------- Organizations --------- */}
