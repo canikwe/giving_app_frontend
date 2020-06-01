@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { Segment, Divider, Icon, Form, Button } from 'semantic-ui-react'
 import EventProgressBar from './EventProgressBar'
+import { eventIsOngoing } from '../helperFunctions/givingEvents'
 
 const EventDetails = ({event: {id, name, target_amount, description, start_date, end_date, organization_id},  getOrganization, getDonations, addDonation, currentUserId }) => {
   const [donation, setDonation] = useState({
@@ -78,7 +79,7 @@ const EventDetails = ({event: {id, name, target_amount, description, start_date,
       <Divider />
 
        {
-         moment().isBetween(start_date, end_date) && 
+         eventIsOngoing({start_date, end_date}) && 
           <section>
             <h4>Donate Today!</h4>
             <Form onSubmit={handleSubmit}>

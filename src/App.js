@@ -37,10 +37,6 @@ function App() {
     fetch('http://localhost:3000/donations')
       .then(res => res.json())
       .then(setDonations)
-      
-      // fetch('http://localhost:3000/users/1') //hardcode for now
-      //   .then(res => res.json())
-      //   .then(setCurrentUser)
 
   }, [])
 

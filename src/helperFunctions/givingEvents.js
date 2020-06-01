@@ -1,9 +1,10 @@
 import moment from 'moment'
 
-export const eventIsOngoing = e => moment().isBetween(e.start_date, e.end_date)
+export const eventIsOngoing = e => moment().isBetween(e.start_date, e.end_date) || moment().isSame(e.start_date, 'day')
+
 export const filterOngoingEvents = events => events.filter(eventIsOngoing)
 
-export const eventIsFinished = e => moment().isAfter(e.end_date)
+export const eventIsFinished = e => !moment().isSame(e.end_date, 'day') && moment().isAfter(e.end_date)
 export const filterFinishedEvents = events => events.filter(eventIsFinished)
 
 export const eventIsUpcoming = e => moment().isBefore(e.start_date)
